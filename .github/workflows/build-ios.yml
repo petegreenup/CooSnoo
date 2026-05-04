@@ -34,17 +34,25 @@ jobs:
       - name: Sync Capacitor iOS platform
         run: npx cap sync ios
 
+      - name: Show iOS directory structure
+        run: find ios -maxdepth 3 -type f | head -40
+
       - name: Install CocoaPods dependencies
         run: |
-          cd ios/App
-          pod install
+          PODFILE_DIR=$(find ios -name "Podfile" -not -path "*/Pods/*" | head -1 | xargs dirname)
+          echo "Found Podfile in: $PODFILE_DIR"
+          cd "$PODFILE_DIR"
+          pod install --repo-update
 
       - name: Build unsigned IPA
         run: |
-          cd ios/App
+          WORKSPACE=$(find ios -name "*.xcworkspace" -not -path "*/Pods/*" | head -1)
+          WORKSPACE_DIR=$(dirname "$WORKSPACE")
+          WORKSPACE_NAME=$(basename "$WORKSPACE")
+          echo "Using workspace: $WORKSPACE"
 
           xcodebuild \
-            -workspace App.xcworkspace \
+            -workspace "$WORKSPACE" \
             -scheme App \
             -configuration Release \
             -destination "generic/platform=iOS" \
