@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "DmLJH3o1xlaQJc6gxrCtp"
+uri = "file://coosnoo-debug.tar.gz"
+type = "unspecified"
+title = "CooSnoo APK (extract the .apk from inside)"
+
+[[outputs]]
+id = "_YP1k1NR2OY-XDVX4VSqs"
+uri = "file://coosnoo-debug.zip"
+type = "unspecified"
+title = "CooSnoo Debug APK"

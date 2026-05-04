@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "CooSnoo",
+    "slug": "coosnoo",
+    "version": "1.0.0",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.coosnoo.app",
+      "versionCode": 1
+    }
+  }
+}

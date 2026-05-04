@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CooSnoo</string>
+    <string name="title_activity_main">CooSnoo</string>
+    <string name="package_name">com.coosnoo.app</string>
+    <string name="custom_url_scheme">com.coosnoo.app</string>
+</resources>

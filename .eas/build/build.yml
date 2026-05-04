@@ -1,0 +1,29 @@
+build:
+  name: CooSnoo Android APK
+  steps:
+    - uses: eas/use-npm-cache@v1
+
+    - run:
+        name: Install JS dependencies
+        command: npm install
+
+    - run:
+        name: Build web assets
+        command: npm run build
+
+    - run:
+        name: Sync Capacitor Android
+        command: npx cap sync android
+
+    - run:
+        name: Make Gradle executable
+        command: chmod +x android/gradlew
+
+    - run:
+        name: Build debug APK
+        command: cd android && ./gradlew assembleDebug --no-daemon
+
+    - find:
+        - pattern: android/app/build/outputs/apk/debug/app-debug.apk
+          build-artifact: true
+          as: coosnoo-debug.apk
