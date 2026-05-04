@@ -22,37 +22,31 @@ jobs:
       - name: Install JS dependencies
         run: npm install
 
-      - name: Install Capacitor iOS package
-        run: npm install @capacitor/ios
+      - name: Install Capacitor iOS (pinned to match project version)
+        run: npm install @capacitor/ios@8.3.0
 
       - name: Build web assets
         run: npm run build
 
       - name: Add iOS platform
-        run: npx cap add ios
+        run: |
+          npx cap add ios
+          echo "=== Contents of ios/ after cap add ==="
+          ls -la ios/ || echo "ERROR: ios/ directory was not created"
+          ls -la ios/App/ || echo "ERROR: ios/App/ directory was not created"
 
       - name: Sync Capacitor iOS platform
         run: npx cap sync ios
 
-      - name: Show iOS directory structure
-        run: find ios -maxdepth 3 -type f | head -40
-
       - name: Install CocoaPods dependencies
         run: |
-          PODFILE_DIR=$(find ios -name "Podfile" -not -path "*/Pods/*" | head -1 | xargs dirname)
-          echo "Found Podfile in: $PODFILE_DIR"
-          cd "$PODFILE_DIR"
+          cd ios/App
           pod install --repo-update
 
       - name: Build unsigned IPA
         run: |
-          WORKSPACE=$(find ios -name "*.xcworkspace" -not -path "*/Pods/*" | head -1)
-          WORKSPACE_DIR=$(dirname "$WORKSPACE")
-          WORKSPACE_NAME=$(basename "$WORKSPACE")
-          echo "Using workspace: $WORKSPACE"
-
           xcodebuild \
-            -workspace "$WORKSPACE" \
+            -workspace ios/App/App.xcworkspace \
             -scheme App \
             -configuration Release \
             -destination "generic/platform=iOS" \
@@ -63,7 +57,6 @@ jobs:
             PROVISIONING_PROFILE="" \
             archive
 
-          # Package .app into a sideload-ready .ipa
           mkdir -p "$RUNNER_TEMP/Payload"
           cp -r "$RUNNER_TEMP/CooSnoo.xcarchive/Products/Applications/App.app" \
                 "$RUNNER_TEMP/Payload/CooSnoo.app"
